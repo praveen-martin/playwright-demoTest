@@ -3,7 +3,7 @@ const { expect } = require('@playwright/test');
 /**
  * Page Object: ViewDashboardPage
  * Project    : Playwright
- * Generated  : 2026-05-18 16:05
+ * Generated  : 2026-05-18 16:15
  */
 class ViewDashboardPage {
   constructor(page) {
