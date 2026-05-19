@@ -1,24 +1,20 @@
+// src/tests/viewDashboard.spec.js
 require('dotenv').config();
+
 const { test, expect } = require('@playwright/test');
-const ViewDashboardPage = require('../pages/ViewDashboardPage.js');
+const ViewDashboardPage = require('../pages/ViewDashboardPage');
 
-/**
- * Test Spec  : Playwright — ViewDashboard
- * Generated  : 2026-05-18 16:15
- */
-test.describe('Playwright - ViewDashboard Tests', () => {
+test('View Dashboard - Successful Login and Navigation', async ({ page }) => {
+  const dashboard = new ViewDashboardPage(page);
 
-  test('should load the page successfully', async ({ page }) => {
-    const viewDashboard = new ViewDashboardPage(page);
-    await viewDashboard.navigate(process.env.BASE_URL);
-    await expect(page).not.toHaveURL('about:blank');
-  });
+  await dashboard.navigate(process.env.BASE_URL);
+  await dashboard.goToSignin();
 
-  test('should perform main workflow actions', async ({ page }) => {
-    const viewDashboard = new ViewDashboardPage(page);
-    await viewDashboard.navigate(process.env.BASE_URL);
-    // Auto-generated placeholder
-    await viewDashboard.verifyDashboard();
-  });
+  await dashboard.enterEmail(process.env.EMAIL);
+  await dashboard.enterPassword(process.env.PASSWORD);
 
+  await dashboard.clickLogin();
+  await dashboard.verifyDashboard();
+  await dashboard.checkRecruitmentStatistics();
+  await dashboard.checkQuickNavigationLinks();
 });
