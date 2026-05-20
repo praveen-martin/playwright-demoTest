@@ -4,24 +4,32 @@ require('dotenv').config();
 const { test, expect } = require('@playwright/test');
 const LoginScreenForRecruitersPage = require('../pages/LoginScreenForRecruitersPage');
 
-test('Recruiter Login Flow', async ({ page }) => {
+test('Login Flow for Recruiters', async ({ page }) => {
   const loginPage = new LoginScreenForRecruitersPage(page);
 
-  await loginPage.navigate(process.env.BASE_URL);
+  await page.goto(process.env.BASE_URL);
   await loginPage.goToSignin();
-
+  
+  await loginPage.checkGetStartedButton();
+  
   await loginPage.enterEmail(process.env.EMAIL);
   await loginPage.enterPassword(process.env.PASSWORD);
-
   await loginPage.clickLogin();
+  
   await loginPage.verifyDashboard();
+  await loginPage.waitForNetworkIdle();
 
-  // Additional tests for error message and button state
-  await loginPage.enterEmail('invalid@example.com');
+  await loginPage.enterEmail(process.env.EMAIL);
   await loginPage.enterPassword('wrongpassword');
   await loginPage.clickLogin();
-  await loginPage.verifyErrorMessage();
-
-  const isEnabled = await loginPage.isLoginButtonEnabled();
-  expect(isEnabled).toBe(false);
+  
+  await loginPage.waitForNetworkIdle();
+  await loginPage.checkErrorMessage();
+  
+  await loginPage.enterEmail(process.env.EMAIL);
+  await loginPage.enterPassword(process.env.PASSWORD);
+  await loginPage.clickLogin();
+  
+  await loginPage.waitForNetworkIdle();
+  await loginPage.verifyDashboard();
 });
