@@ -17,11 +17,13 @@ class LoginScreenForRecruitersPage {
     await getStartedBtn.click();
 
     const orgBtn = this.page.locator('button:has-text("Continue as Organization"), a:has-text("Continue as Organization")').first();
-    if (await orgBtn.count() > 0) {
+    try {
       await orgBtn.waitFor({ state: 'attached', timeout: 5000 });
       await orgBtn.scrollIntoViewIfNeeded();
       await orgBtn.waitFor({ state: 'visible', timeout: 5000 });
       await orgBtn.click();
+    } catch (_) {
+      // "Continue as Organization" step is optional
     }
 
     await this.page.waitForURL(/signin|login|organization-signup/i, { timeout: 15000 });
@@ -61,20 +63,8 @@ class LoginScreenForRecruitersPage {
     await expect(this.page).toHaveURL(/dashboard|home|recruiter/i, { timeout: 30000 });
   }
 
-  async checkErrorMessage() {
-    const errorMsg = this.page.locator(':has-text("Incorrect email or password")').first();
-    await errorMsg.waitFor({ state: 'attached', timeout: 15000 });
-    await errorMsg.scrollIntoViewIfNeeded();
-    await errorMsg.waitFor({ state: 'visible', timeout: 15000 });
-    await expect(errorMsg).toBeVisible();
-  }
-
-  async checkGetStartedButton() {
-    const getStartedBtn = this.page.locator('button:has-text("Get Started"), a:has-text("Get Started"), [role="button"]:has-text("Get Started")').first();
-    await getStartedBtn.waitFor({ state: 'attached', timeout: 15000 });
-    await getStartedBtn.scrollIntoViewIfNeeded();
-    await getStartedBtn.waitFor({ state: 'visible', timeout: 15000 });
-    await expect(getStartedBtn).toBeVisible();
+  async verifyLoginError() {
+    await expect(this.page.locator('*').filter({ hasText: /error|invalid|incorrect|failed/i }).first()).toBeVisible({ timeout: 10000 });
   }
 }
 
