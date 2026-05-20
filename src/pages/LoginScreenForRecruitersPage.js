@@ -7,7 +7,7 @@ class LoginScreenForRecruitersPage {
   }
 
   async navigate(url) {
-    await this.page.goto(url);
+    await this.page.goto(url, { waitUntil: 'load' });
     await this.page.waitForLoadState('networkidle');
   }
 
@@ -15,32 +15,46 @@ class LoginScreenForRecruitersPage {
     const currentUrl = this.page.url();
     if (currentUrl.includes('signin') || currentUrl.includes('login')) return;
 
-    const getStartedBtn = this.page.locator('text=Get Started, button:has-text("Get Started"), a:has-text("Get Started")').first();
-    await getStartedBtn.waitFor({ state: 'visible' });
+    const getStartedBtn = this.page.locator('button:has-text("Get Started"), a:has-text("Get Started"), [role="button"]:has-text("Get Started"), text=Get Started').first();
+    await getStartedBtn.waitFor({ state: 'attached', timeout: 15000 });
+    await getStartedBtn.scrollIntoViewIfNeeded();
+    await getStartedBtn.waitFor({ state: 'visible', timeout: 15000 });
     await getStartedBtn.click();
 
-    const orgBtn = this.page.locator('text=Continue as Organization, button:has-text("Continue as Organization")').first();
-    if (await orgBtn.isVisible()) {
+    const orgBtn = this.page.locator('button:has-text("Continue as Organization"), text=Continue as Organization').first();
+    try {
+      await orgBtn.waitFor({ state: 'attached', timeout: 5000 });
+      await orgBtn.scrollIntoViewIfNeeded();
+      await orgBtn.waitFor({ state: 'visible', timeout: 5000 });
       await orgBtn.click();
+    } catch (_) {
+      // "Continue as Organization" step is optional
     }
-    await this.page.waitForURL(/signin|login|organization-signup/i);
+
+    await this.page.waitForURL(/signin|login|organization-signup/i, { timeout: 15000 });
   }
 
   async enterEmail(email) {
     const el = this.page.locator('input[type="email"], input[name="email"], [placeholder*="email" i], #email').first();
-    await el.waitFor({ state: 'visible' });
+    await el.waitFor({ state: 'attached', timeout: 15000 });
+    await el.scrollIntoViewIfNeeded();
+    await el.waitFor({ state: 'visible', timeout: 15000 });
     await el.fill(email);
   }
 
   async enterPassword(password) {
     const el = this.page.locator('input[type="password"], input[name="password"], [placeholder*="password" i], #password').first();
-    await el.waitFor({ state: 'visible' });
+    await el.waitFor({ state: 'attached', timeout: 15000 });
+    await el.scrollIntoViewIfNeeded();
+    await el.waitFor({ state: 'visible', timeout: 15000 });
     await el.fill(password);
   }
 
   async clickLogin() {
     const btn = this.page.locator('button:has-text("Login"), button:has-text("Sign in"), [type="submit"]').first();
-    await btn.waitFor({ state: 'visible' });
+    await btn.waitFor({ state: 'attached', timeout: 15000 });
+    await btn.scrollIntoViewIfNeeded();
+    await btn.waitFor({ state: 'visible', timeout: 15000 });
     await btn.click();
     await this.page.waitForLoadState('networkidle');
   }
