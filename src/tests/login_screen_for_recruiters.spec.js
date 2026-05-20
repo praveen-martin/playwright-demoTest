@@ -1,24 +1,27 @@
+// src/tests/LoginScreenForRecruiters.spec.js
 require('dotenv').config();
+
 const { test, expect } = require('@playwright/test');
-const LoginScreenForRecruitersPage = require('../pages/LoginScreenForRecruitersPage.js');
+const LoginScreenForRecruitersPage = require('../pages/LoginScreenForRecruitersPage');
 
-/**
- * Test Spec  : Playwright — LoginScreenForRecruiters
- * Generated  : 2026-05-20 16:01
- */
-test.describe('Playwright - LoginScreenForRecruiters Tests', () => {
+test('Recruiter Login Flow', async ({ page }) => {
+  const loginPage = new LoginScreenForRecruitersPage(page);
 
-  test('should load the page successfully', async ({ page }) => {
-    const loginScreenForRecruiters = new LoginScreenForRecruitersPage(page);
-    await loginScreenForRecruiters.navigate(process.env.BASE_URL);
-    await expect(page).not.toHaveURL('about:blank');
-  });
+  await loginPage.navigate(process.env.BASE_URL);
+  await loginPage.goToSignin();
 
-  test('should perform main workflow actions', async ({ page }) => {
-    const loginScreenForRecruiters = new LoginScreenForRecruitersPage(page);
-    await loginScreenForRecruiters.navigate(process.env.BASE_URL);
-    // Auto-generated placeholder
-    await loginScreenForRecruiters.verifyDashboard();
-  });
+  await loginPage.enterEmail(process.env.EMAIL);
+  await loginPage.enterPassword(process.env.PASSWORD);
 
+  await loginPage.clickLogin();
+  await loginPage.verifyDashboard();
+
+  // Additional tests for error message and button state
+  await loginPage.enterEmail('invalid@example.com');
+  await loginPage.enterPassword('wrongpassword');
+  await loginPage.clickLogin();
+  await loginPage.verifyErrorMessage();
+
+  const isEnabled = await loginPage.isLoginButtonEnabled();
+  expect(isEnabled).toBe(false);
 });
