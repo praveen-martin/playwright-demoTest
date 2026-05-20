@@ -52,13 +52,13 @@ class ViewDashboardPage {
   async checkRecruitmentStatistics() {
     const statsSection = this.page.locator('#recruitmentStatistics').first();
     await statsSection.waitFor({ state: 'visible' });
-    // Add verification logic for recruitment statistics here
+    // Add checks for specific statistics here
   }
 
   async checkQuickNavigationLinks() {
     const navLinks = this.page.locator('#quickNavigation').first();
     await navLinks.waitFor({ state: 'visible' });
-    // Add verification logic for quick navigation links here
+    // Add checks for specific links here
   }
 }
 
