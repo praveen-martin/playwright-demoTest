@@ -1,4 +1,4 @@
-// src/tests/loginScreenForRecruiters.spec.js
+// src/tests/LoginScreenForRecruiters.spec.js
 require('dotenv').config();
 
 const { test, expect } = require('@playwright/test');
