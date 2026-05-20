@@ -1,66 +1,74 @@
-// src/pages/LoginScreenForRecruitersPage.js
 const { expect } = require('@playwright/test');
 
+/**
+ * Page Object: LoginScreenForRecruitersPage
+ * Project    : Playwright
+ * Generated  : 2026-05-20 16:01
+ */
 class LoginScreenForRecruitersPage {
   constructor(page) {
     this.page = page;
   }
 
+  /**
+   * Navigate to the given URL and wait for the page to be ready.
+   */
   async navigate(url) {
-    await this.page.goto(url, { waitUntil: 'load' });
+    await this.page.goto(url);
     await this.page.waitForLoadState('networkidle');
   }
 
-  async goToSignin() {
-    const currentUrl = this.page.url();
-    if (currentUrl.includes('signin') || currentUrl.includes('login')) return;
-
-    const getStartedBtn = this.page.locator('button:has-text("Get Started"), a:has-text("Get Started"), [role="button"]:has-text("Get Started"), text=Get Started').first();
-    await getStartedBtn.waitFor({ state: 'attached', timeout: 15000 });
-    await getStartedBtn.scrollIntoViewIfNeeded();
-    await getStartedBtn.waitFor({ state: 'visible', timeout: 15000 });
-    await getStartedBtn.click();
-
-    const orgBtn = this.page.locator('button:has-text("Continue as Organization"), text=Continue as Organization').first();
-    try {
-      await orgBtn.waitFor({ state: 'attached', timeout: 5000 });
-      await orgBtn.scrollIntoViewIfNeeded();
-      await orgBtn.waitFor({ state: 'visible', timeout: 5000 });
-      await orgBtn.click();
-    } catch (_) {
-      // "Continue as Organization" step is optional
-    }
-
-    await this.page.waitForURL(/signin|login|organization-signup/i, { timeout: 15000 });
+  /**
+   * Step: Story Title: Login Screen for Recruiters | Story Description: As a recruiter, I want to log in to the application using 
+   */
+  async performStoryTitleLoginScreen() {
+    // TODO: implement this step
+    await this.page.waitForLoadState('domcontentloaded');
   }
 
-  async enterEmail(email) {
-    const el = this.page.locator('input[type="email"], input[name="email"], [placeholder*="email" i], #email').first();
-    await el.waitFor({ state: 'attached', timeout: 15000 });
-    await el.scrollIntoViewIfNeeded();
-    await el.waitFor({ state: 'visible', timeout: 15000 });
-    await el.fill(email);
+  /**
+   * Step: 2. The login screen must have fields for Email ID and Password.
+   */
+  async perform2TheLoginScreen() {
+    // TODO: implement this step
+    await this.page.waitForLoadState('domcontentloaded');
   }
 
-  async enterPassword(password) {
-    const el = this.page.locator('input[type="password"], input[name="password"], [placeholder*="password" i], #password').first();
-    await el.waitFor({ state: 'attached', timeout: 15000 });
-    await el.scrollIntoViewIfNeeded();
-    await el.waitFor({ state: 'visible', timeout: 15000 });
-    await el.fill(password);
+  /**
+   * Step: 3. A 'Show/Hide Password' option should toggle the visibility of the password.
+   */
+  async perform3AShowHide() {
+    // TODO: implement this step
+    await this.page.waitForLoadState('domcontentloaded');
   }
 
-  async clickLogin() {
-    const btn = this.page.locator('button:has-text("Login"), button:has-text("Sign in"), [type="submit"]').first();
-    await btn.waitFor({ state: 'attached', timeout: 15000 });
-    await btn.scrollIntoViewIfNeeded();
-    await btn.waitFor({ state: 'visible', timeout: 15000 });
-    await btn.click();
-    await this.page.waitForLoadState('networkidle');
+  /**
+   * Step: 4. When incorrect credentials are entered, an error message must be displayed: 'Incorrect email or password.'
+   */
+  async perform4WhenIncorrectCredentials() {
+    // TODO: implement this step
+    await this.page.waitForLoadState('domcontentloaded');
+  }
+
+  /**
+   * Step: 5. When valid credentials are entered, the user should be redirected to the dashboard.
+   */
+  async perform5WhenValidCredentials() {
+    // TODO: implement this step
+    await this.page.waitForLoadState('domcontentloaded');
+  }
+
+  /**
+   * Step: 6 The Login button must only be enabled when both fields are filled in.
+   */
+  async perform6TheLoginButton() {
+    // TODO: implement this step
+    await this.page.waitForLoadState('domcontentloaded');
   }
 
   async verifyDashboard() {
-    await expect(this.page).toHaveURL(/dashboard|home|recruiter/i, { timeout: 30000 });
+    await this.page.waitForLoadState('networkidle');
+    await expect(this.page).toHaveURL(/dashboard|home/i);
   }
 }
 

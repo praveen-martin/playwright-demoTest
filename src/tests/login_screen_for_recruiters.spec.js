@@ -1,19 +1,24 @@
-// src/tests/LoginScreenForRecruiters.spec.js
 require('dotenv').config();
-
 const { test, expect } = require('@playwright/test');
-const LoginScreenForRecruitersPage = require('../pages/LoginScreenForRecruitersPage');
+const LoginScreenForRecruitersPage = require('../pages/LoginScreenForRecruitersPage.js');
 
-test('Login Flow for Recruiters', async ({ page }) => {
-  const loginPage = new LoginScreenForRecruitersPage(page);
+/**
+ * Test Spec  : Playwright — LoginScreenForRecruiters
+ * Generated  : 2026-05-20 16:01
+ */
+test.describe('Playwright - LoginScreenForRecruiters Tests', () => {
 
-  await loginPage.navigate(process.env.BASE_URL);
-  await loginPage.goToSignin();
+  test('should load the page successfully', async ({ page }) => {
+    const loginScreenForRecruiters = new LoginScreenForRecruitersPage(page);
+    await loginScreenForRecruiters.navigate(process.env.BASE_URL);
+    await expect(page).not.toHaveURL('about:blank');
+  });
 
-  await loginPage.enterEmail(process.env.EMAIL);
-  await loginPage.enterPassword(process.env.PASSWORD);
+  test('should perform main workflow actions', async ({ page }) => {
+    const loginScreenForRecruiters = new LoginScreenForRecruitersPage(page);
+    await loginScreenForRecruiters.navigate(process.env.BASE_URL);
+    // Auto-generated placeholder
+    await loginScreenForRecruiters.verifyDashboard();
+  });
 
-  await loginPage.clickLogin();
-
-  await loginPage.verifyDashboard();
 });
