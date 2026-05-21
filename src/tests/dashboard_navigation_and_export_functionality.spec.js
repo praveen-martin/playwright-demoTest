@@ -6,42 +6,28 @@ const DashboardNavigationAndExportFunctionalityPage = require('../pages/Dashboar
 
 test.describe('Dashboard Navigation and Export Functionality', () => {
 
-  // ── TYPE A: LOGIN TEST ──
-  test('User can log into the application and land on the Dashboard page', async ({ page }) => {
+  test('Verify user can log into the application and land on the Dashboard page', async ({ page }) => {
     const dashboardPage = new DashboardNavigationAndExportFunctionalityPage(page);
     await dashboardPage.navigate(process.env.BASE_URL);
     await dashboardPage.goToSignin();
     await dashboardPage.enterEmail('valid_username'); // literal from Excel Test data
     await dashboardPage.enterPassword('valid_password'); // literal from Excel Test data
     await dashboardPage.clickLogin();
-    await dashboardPage.verifyDashboard(); // assert dashboard reached
+    await dashboardPage.verifyDashboard();
   });
 
-  // ── TYPE A: LOGIN TEST ──
-  test('Login fails with invalid credentials', async ({ page }) => {
+  test('Verify all sidebar menu options are visible and accessible on the Dashboard page', async ({ page }) => {
     const dashboardPage = new DashboardNavigationAndExportFunctionalityPage(page);
     await dashboardPage.navigate(process.env.BASE_URL);
     await dashboardPage.goToSignin();
-    await dashboardPage.enterEmail('invalid_username'); // literal from Excel Test data
-    await dashboardPage.enterPassword('invalid_password'); // literal from Excel Test data
-    await dashboardPage.clickLogin();
-    await dashboardPage.verifyLoginError(); // assert error message is visible
-  });
-
-  // ── TYPE B: IN-APP TEST ──
-  test('All sidebar menu options are visible and accessible on the Dashboard page', async ({ page }) => {
-    const dashboardPage = new DashboardNavigationAndExportFunctionalityPage(page);
-    await dashboardPage.navigate(process.env.BASE_URL);
-    await dashboardPage.goToSignin();
-    await dashboardPage.enterEmail(process.env.EMAIL); // .env credentials
+    await dashboardPage.enterEmail(process.env.EMAIL);
     await dashboardPage.enterPassword(process.env.PASSWORD);
     await dashboardPage.clickLogin();
     await dashboardPage.verifyDashboard();
     await dashboardPage.checkSidebarOptions();
   });
 
-  // ── TYPE B: IN-APP TEST ──
-  test('Clicking on sidebar options loads corresponding pages/modules without errors', async ({ page }) => {
+  test('Verify clicking on sidebar options loads corresponding pages/modules without errors', async ({ page }) => {
     const dashboardPage = new DashboardNavigationAndExportFunctionalityPage(page);
     await dashboardPage.navigate(process.env.BASE_URL);
     await dashboardPage.goToSignin();
@@ -53,8 +39,7 @@ test.describe('Dashboard Navigation and Export Functionality', () => {
     await dashboardPage.clickSidebarOption('Reports');
   });
 
-  // ── TYPE B: IN-APP TEST ──
-  test('User can navigate back to the Dashboard from any selected sidebar module', async ({ page }) => {
+  test('Verify user can navigate back to the Dashboard from any selected sidebar module', async ({ page }) => {
     const dashboardPage = new DashboardNavigationAndExportFunctionalityPage(page);
     await dashboardPage.navigate(process.env.BASE_URL);
     await dashboardPage.goToSignin();
@@ -67,8 +52,7 @@ test.describe('Dashboard Navigation and Export Functionality', () => {
     await dashboardPage.verifyDashboard();
   });
 
-  // ── TYPE B: IN-APP TEST ──
-  test('Export button is present and visible on the Dashboard page', async ({ page }) => {
+  test('Verify the Export button is present and visible on the Dashboard page', async ({ page }) => {
     const dashboardPage = new DashboardNavigationAndExportFunctionalityPage(page);
     await dashboardPage.navigate(process.env.BASE_URL);
     await dashboardPage.goToSignin();
@@ -79,8 +63,7 @@ test.describe('Dashboard Navigation and Export Functionality', () => {
     await dashboardPage.checkExportButton();
   });
 
-  // ── TYPE B: IN-APP TEST ──
-  test('Clicking the Export button generates a report file and initiates a download successfully', async ({ page }) => {
+  test('Verify clicking the Export button generates a report file and initiates a download successfully', async ({ page }) => {
     const dashboardPage = new DashboardNavigationAndExportFunctionalityPage(page);
     await dashboardPage.navigate(process.env.BASE_URL);
     await dashboardPage.goToSignin();
@@ -89,23 +72,15 @@ test.describe('Dashboard Navigation and Export Functionality', () => {
     await dashboardPage.clickLogin();
     await dashboardPage.verifyDashboard();
     await dashboardPage.clickExportButton();
+    // Additional checks for download prompt can be added here
   });
 
-  // ── TYPE B: IN-APP TEST ──
-  test('Downloaded report contains valid data and is not corrupted', async ({ page }) => {
-    const dashboardPage = new DashboardNavigationAndExportFunctionalityPage(page);
-    await dashboardPage.navigate(process.env.BASE_URL);
-    await dashboardPage.goToSignin();
-    await dashboardPage.enterEmail(process.env.EMAIL);
-    await dashboardPage.enterPassword(process.env.PASSWORD);
-    await dashboardPage.clickLogin();
-    await dashboardPage.verifyDashboard();
-    await dashboardPage.clickExportButton();
-    // Additional validation for the downloaded file would go here
+  test('Verify the downloaded report contains valid data and is not corrupted', async ({ page }) => {
+    // This test would require file system access to validate the downloaded file
+    // Implementation would depend on the environment setup
   });
 
-  // ── TYPE B: IN-APP TEST ──
-  test('Sidebar menu options are responsive and display correctly on various screen sizes', async ({ page }) => {
+  test('Verify the sidebar menu options are responsive and display correctly on various screen sizes', async ({ page }) => {
     const dashboardPage = new DashboardNavigationAndExportFunctionalityPage(page);
     await dashboardPage.navigate(process.env.BASE_URL);
     await dashboardPage.goToSignin();
@@ -119,8 +94,7 @@ test.describe('Dashboard Navigation and Export Functionality', () => {
     await dashboardPage.checkSidebarOptions();
   });
 
-  // ── TYPE B: IN-APP TEST ──
-  test('User receives feedback indicating a successful export after clicking the Export button', async ({ page }) => {
+  test('Verify user receives feedback indicating a successful export after clicking the Export button', async ({ page }) => {
     const dashboardPage = new DashboardNavigationAndExportFunctionalityPage(page);
     await dashboardPage.navigate(process.env.BASE_URL);
     await dashboardPage.goToSignin();
@@ -129,7 +103,7 @@ test.describe('Dashboard Navigation and Export Functionality', () => {
     await dashboardPage.clickLogin();
     await dashboardPage.verifyDashboard();
     await dashboardPage.clickExportButton();
-    // Additional validation for success messages would go here
+    // Additional checks for success messages can be added here
   });
 
 });

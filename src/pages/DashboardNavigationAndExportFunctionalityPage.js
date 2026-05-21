@@ -28,7 +28,7 @@ class DashboardNavigationAndExportFunctionalityPage {
       await orgBtn.waitFor({ state: 'visible', timeout: 5000 });
       await orgBtn.click();
     } catch (_) {
-      // "Continue as Organization" step is optional
+      // Optional step
     }
 
     await this.page.waitForURL(/signin|login|organization-signup/i, { timeout: 15000 });
@@ -78,6 +78,7 @@ class DashboardNavigationAndExportFunctionalityPage {
     await sidebar.waitFor({ state: 'attached', timeout: 15000 });
     await sidebar.scrollIntoViewIfNeeded();
     await sidebar.waitFor({ state: 'visible', timeout: 15000 });
+    // Add checks for specific sidebar options here
   }
 
   async clickSidebarOption(optionText) {
