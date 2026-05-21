@@ -17,6 +17,17 @@ test.describe('Dashboard Navigation and Export Functionality', () => {
     await dashboardPage.verifyDashboard(); // assert dashboard reached
   });
 
+  // ── TYPE A: LOGIN TEST ──
+  test('Login fails with invalid credentials', async ({ page }) => {
+    const dashboardPage = new DashboardNavigationAndExportFunctionalityPage(page);
+    await dashboardPage.navigate(process.env.BASE_URL);
+    await dashboardPage.goToSignin();
+    await dashboardPage.enterEmail('invalid_username'); // literal from Excel Test data
+    await dashboardPage.enterPassword('invalid_password'); // literal from Excel Test data
+    await dashboardPage.clickLogin();
+    await dashboardPage.verifyLoginError(); // assert error message is visible
+  });
+
   // ── TYPE B: IN-APP TEST ──
   test('All sidebar menu options are visible and accessible on the Dashboard page', async ({ page }) => {
     const dashboardPage = new DashboardNavigationAndExportFunctionalityPage(page);
@@ -78,7 +89,6 @@ test.describe('Dashboard Navigation and Export Functionality', () => {
     await dashboardPage.clickLogin();
     await dashboardPage.verifyDashboard();
     await dashboardPage.clickExportButton();
-    // Additional checks for download prompt can be added here
   });
 
   // ── TYPE B: IN-APP TEST ──
@@ -91,7 +101,7 @@ test.describe('Dashboard Navigation and Export Functionality', () => {
     await dashboardPage.clickLogin();
     await dashboardPage.verifyDashboard();
     await dashboardPage.clickExportButton();
-    // Additional checks for file validation can be added here
+    // Additional validation for the downloaded file would go here
   });
 
   // ── TYPE B: IN-APP TEST ──
@@ -119,7 +129,7 @@ test.describe('Dashboard Navigation and Export Functionality', () => {
     await dashboardPage.clickLogin();
     await dashboardPage.verifyDashboard();
     await dashboardPage.clickExportButton();
-    // Additional checks for success messages can be added here
+    // Additional validation for success messages would go here
   });
 
 });

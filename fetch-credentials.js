@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 /**
  * TAP-DAP Credential Fetcher
- * ─────────────────────────────────────────────────────────────
+ * ---------------------------------------------------------
  * Logs into TAP with your account credentials (email + password),
  * fetches the Playwright credentials for this project, and writes
- * them to a local .env file — credentials never touch git.
+ * them to a local .env file -- credentials never touch git.
  *
  * Usage:
  *   node fetch-credentials.js
@@ -22,20 +22,19 @@ const readline = require('readline');
 const fs       = require('fs');
 const path     = require('path');
 
-// ── Load project config ───────────────────────────────────────
+// Load project config
 const configPath = path.join(__dirname, 'tap.config.json');
 if (!fs.existsSync(configPath)) {
-  console.error('❌  tap.config.json not found. Re-generate files from TAP.');
+  console.error('tap.config.json not found. Re-generate files from TAP.');
   process.exit(1);
 }
 const config     = JSON.parse(fs.readFileSync(configPath, 'utf8'));
 const TAP_API    = (config.tap_api_url || '').replace(/\/$/, '');
 const PROJECT_ID = config.project_id || '';
 
-if (!TAP_API)    { console.error('❌  tap_api_url missing in tap.config.json'); process.exit(1); }
-if (!PROJECT_ID) { console.error('❌  project_id missing in tap.config.json');  process.exit(1); }
+if (!TAP_API)    { console.error('tap_api_url missing in tap.config.json'); process.exit(1); }
+if (!PROJECT_ID) { console.error('project_id missing in tap.config.json');  process.exit(1); }
 
-// ── HTTP helper ───────────────────────────────────────────────
 function request(url, options, body) {
   return new Promise((resolve, reject) => {
     const lib = url.startsWith('https') ? https : http;
@@ -50,8 +49,7 @@ function request(url, options, body) {
   });
 }
 
-// ── Prompt helper (hides password input) ─────────────────────
-function prompt(question, hidden = false) {
+function prompt(question, hidden) {
   return new Promise((resolve) => {
     const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
     if (hidden) {
@@ -68,7 +66,7 @@ function prompt(question, hidden = false) {
           process.stdout.write('\n');
           rl.close();
           resolve(input);
-        } else if (ch === '') {
+        } else if (ch === '' || ch === '') {
           input = input.slice(0, -1);
         } else {
           input += ch;
@@ -82,20 +80,18 @@ function prompt(question, hidden = false) {
 }
 
 async function main() {
-  console.log('\n🔑  TAP-DAP Credential Fetcher');
-  console.log('─'.repeat(40));
+  console.log('\nTAP-DAP Credential Fetcher');
+  console.log('-'.repeat(40));
 
-  // Read from env vars or prompt interactively
   const email    = process.env.TAP_EMAIL    || await prompt('TAP Email    : ');
   const password = process.env.TAP_PASSWORD || await prompt('TAP Password : ', true);
 
   if (!email || !password) {
-    console.error('❌  Email and password are required.');
+    console.error('Email and password are required.');
     process.exit(1);
   }
 
-  // ── Step 1: Login to TAP ──────────────────────────────────
-  console.log('\n⏳  Logging in …');
+  console.log('\nLogging in...');
   const loginBody = JSON.stringify({ email, password });
   const loginRes  = await request(
     `${TAP_API}/api/signin`,
@@ -104,48 +100,46 @@ async function main() {
   );
 
   if (loginRes.status !== 200) {
-    console.error(`❌  Login failed (${loginRes.status}): ${loginRes.body}`);
+    console.error(`Login failed (${loginRes.status}): ${loginRes.body}`);
     process.exit(1);
   }
 
   let loginData;
   try { loginData = JSON.parse(loginRes.body); } catch {
-    console.error('❌  Unexpected login response (not JSON)');
+    console.error('Unexpected login response (not JSON)');
     process.exit(1);
   }
 
   const token = loginData.access_token;
   if (!token) {
-    console.error('❌  No access_token in login response');
+    console.error('No access_token in login response');
     process.exit(1);
   }
-  console.log('✅  Login successful');
+  console.log('Login successful');
 
-  // ── Step 2: Fetch project credentials ────────────────────
-  console.log('⏳  Fetching project credentials …');
+  console.log('Fetching project credentials...');
   const credRes = await request(
     `${TAP_API}/api/generated_playwright/credentials?project_id=${PROJECT_ID}`,
     { method: 'GET', headers: { Authorization: `Bearer ${token}` } }
   );
 
   if (credRes.status !== 200) {
-    console.error(`❌  Credentials fetch failed (${credRes.status}): ${credRes.body}`);
+    console.error(`Credentials fetch failed (${credRes.status}): ${credRes.body}`);
     process.exit(1);
   }
 
   let creds;
   try { creds = JSON.parse(credRes.body); } catch {
-    console.error('❌  Invalid JSON in credentials response');
+    console.error('Invalid JSON in credentials response');
     process.exit(1);
   }
 
-  // ── Step 3: Write .env ────────────────────────────────────
   const envContent = `BASE_URL=${creds.base_url || ''}\nEMAIL=${creds.email || ''}\nPASSWORD=${creds.password || ''}\n`;
   fs.writeFileSync(path.join(__dirname, '.env'), envContent, 'utf8');
 
-  console.log('✅  .env written successfully!');
+  console.log('.env written successfully!');
   console.log('\nYou can now run your tests:');
   console.log('  npx playwright test\n');
 }
 
-main().catch(e => { console.error('❌  Unexpected error:', e.message); process.exit(1); });
+main().catch(e => { console.error('Unexpected error:', e.message); process.exit(1); });

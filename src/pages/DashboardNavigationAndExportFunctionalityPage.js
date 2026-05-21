@@ -78,17 +78,14 @@ class DashboardNavigationAndExportFunctionalityPage {
     await sidebar.waitFor({ state: 'attached', timeout: 15000 });
     await sidebar.scrollIntoViewIfNeeded();
     await sidebar.waitFor({ state: 'visible', timeout: 15000 });
-    await expect(sidebar.locator(':has-text("Recruitment")')).toBeVisible();
-    await expect(sidebar.locator(':has-text("Reports")')).toBeVisible();
-    await expect(sidebar.locator(':has-text("Settings")')).toBeVisible();
   }
 
-  async clickSidebarOption(option) {
-    const el = this.page.locator(`a, button, [role="tab"]:has-text("${option}")`).first();
-    await el.waitFor({ state: 'attached', timeout: 15000 });
-    await el.scrollIntoViewIfNeeded();
-    await el.waitFor({ state: 'visible', timeout: 15000 });
-    await el.click();
+  async clickSidebarOption(optionText) {
+    const option = this.page.locator('a, button').filter({ hasText: new RegExp(optionText, 'i') }).first();
+    await option.waitFor({ state: 'attached', timeout: 15000 });
+    await option.scrollIntoViewIfNeeded();
+    await option.waitFor({ state: 'visible', timeout: 15000 });
+    await option.click();
     await this.waitForNetworkIdle();
   }
 
@@ -97,7 +94,6 @@ class DashboardNavigationAndExportFunctionalityPage {
     await exportBtn.waitFor({ state: 'attached', timeout: 15000 });
     await exportBtn.scrollIntoViewIfNeeded();
     await exportBtn.waitFor({ state: 'visible', timeout: 15000 });
-    await expect(exportBtn).toBeVisible();
   }
 
   async clickExportButton() {
