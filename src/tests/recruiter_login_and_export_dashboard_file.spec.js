@@ -5,7 +5,7 @@ const { test, expect } = require('@playwright/test');
 const RecruiterLoginAndExportDashboardFilePage = require('../pages/RecruiterLoginAndExportDashboardFilePage');
 
 test.describe('Recruiter Login and Export Dashboard File', () => {
-  
+
   test('Verify navigation to Organization Signup/Login screen', async ({ page }) => {
     const sample = new RecruiterLoginAndExportDashboardFilePage(page);
     await sample.navigate(process.env.BASE_URL);
@@ -28,17 +28,11 @@ test.describe('Recruiter Login and Export Dashboard File', () => {
     await sample.navigate(process.env.BASE_URL);
     await sample.goToSignin();
     await sample.enterPassword('P@ssw0rd123'); // literal from Excel Test data
-    const showHideBtn = page.locator('button:has-text("Show"), button:has-text("Hide")').first();
-    await showHideBtn.waitFor({ state: 'attached', timeout: 15000 });
-    await showHideBtn.scrollIntoViewIfNeeded();
-    await showHideBtn.waitFor({ state: 'visible', timeout: 15000 });
-    await showHideBtn.click();
-    // Add assertions for visibility
-    await showHideBtn.click();
-    // Add assertions for visibility again
+    await sample.togglePasswordVisibility();
+    await sample.togglePasswordVisibility();
   });
 
-  test('Verify Export button functionality', async ({ page }) => {
+  test('Verify Export button functionality on the dashboard', async ({ page }) => {
     const sample = new RecruiterLoginAndExportDashboardFilePage(page);
     await sample.navigate(process.env.BASE_URL);
     await sample.goToSignin();
@@ -47,7 +41,6 @@ test.describe('Recruiter Login and Export Dashboard File', () => {
     await sample.clickLogin();
     await sample.verifyDashboard();
     await sample.clickExportButton();
-    // Add assertions for download prompt
   });
 
   test('Verify Recruiter Dashboard displays relevant information', async ({ page }) => {
@@ -61,7 +54,25 @@ test.describe('Recruiter Login and Export Dashboard File', () => {
     await sample.checkRecruitmentMetrics();
   });
 
-  test('Verify successful logout from Recruiter Dashboard', async ({ page }) => {
+  test('Verify successful logout from the Recruiter Dashboard', async ({ page }) => {
+    const sample = new RecruiterLoginAndExportDashboardFilePage(page);
+    await sample.navigate(process.env.BASE_URL);
+    await sample.goToSignin();
+    await sample.enterEmail(process.env.EMAIL);
+    await sample.enterPassword(process.env.PASSWORD);
+    await sample.clickLogin();
+    await sample.logout();
+    await sample.navigateBackToWelcome();
+  });
+
+  test('Verify navigation back to Welcome page from Login page', async ({ page }) => {
+    const sample = new RecruiterLoginAndExportDashboardFilePage(page);
+    await sample.navigate(process.env.BASE_URL);
+    await sample.goToSignin();
+    await sample.navigateBackToWelcome();
+  });
+
+  test('Verify viewing various recruitment metrics on the Recruiter Dashboard', async ({ page }) => {
     const sample = new RecruiterLoginAndExportDashboardFilePage(page);
     await sample.navigate(process.env.BASE_URL);
     await sample.goToSignin();
@@ -69,24 +80,19 @@ test.describe('Recruiter Login and Export Dashboard File', () => {
     await sample.enterPassword(process.env.PASSWORD);
     await sample.clickLogin();
     await sample.verifyDashboard();
-    await sample.clickLogout();
-    // Add assertions for redirection to Welcome page
+    await sample.checkRecruitmentMetrics();
   });
 
-  test('Verify navigation back to Welcome page from Login page', async ({ page }) => {
+  test('Verify access to help or support options from the Login page', async ({ page }) => {
     const sample = new RecruiterLoginAndExportDashboardFilePage(page);
     await sample.navigate(process.env.BASE_URL);
     await sample.goToSignin();
-    await sample.clickBackButton();
-    // Add assertions for Welcome page elements
-  });
-
-  test('Verify access to help/support options from Login page', async ({ page }) => {
-    const sample = new RecruiterLoginAndExportDashboardFilePage(page);
-    await sample.navigate(process.env.BASE_URL);
-    await sample.goToSignin();
-    await sample.checkHelpSupport();
-    // Add assertions for help/support page content
+    const helpLink = this.page.locator('a:has-text("Help"), a:has-text("Support")').first();
+    await helpLink.waitFor({ state: 'attached', timeout: 15000 });
+    await helpLink.scrollIntoViewIfNeeded();
+    await helpLink.waitFor({ state: 'visible', timeout: 15000 });
+    await helpLink.click();
+    await sample.waitForNetworkIdle();
   });
 
 });

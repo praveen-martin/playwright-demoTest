@@ -87,7 +87,16 @@ class RecruiterLoginAndExportDashboardFilePage {
     await this.waitForNetworkIdle();
   }
 
-  async clickLogout() {
+  async togglePasswordVisibility() {
+    const toggleBtn = this.page.locator('button:has-text("Show/Hide Password")').first();
+    await toggleBtn.waitFor({ state: 'attached', timeout: 15000 });
+    await toggleBtn.scrollIntoViewIfNeeded();
+    await toggleBtn.waitFor({ state: 'visible', timeout: 15000 });
+    await toggleBtn.click();
+    await this.waitForNetworkIdle();
+  }
+
+  async logout() {
     const logoutBtn = this.page.locator('button:has-text("Logout"), a:has-text("Logout")').first();
     await logoutBtn.waitFor({ state: 'attached', timeout: 15000 });
     await logoutBtn.scrollIntoViewIfNeeded();
@@ -96,21 +105,12 @@ class RecruiterLoginAndExportDashboardFilePage {
     await this.waitForNetworkIdle();
   }
 
-  async clickBackButton() {
+  async navigateBackToWelcome() {
     const backBtn = this.page.locator('button:has-text("Back"), a:has-text("Back")').first();
     await backBtn.waitFor({ state: 'attached', timeout: 15000 });
     await backBtn.scrollIntoViewIfNeeded();
     await backBtn.waitFor({ state: 'visible', timeout: 15000 });
     await backBtn.click();
-    await this.waitForNetworkIdle();
-  }
-
-  async checkHelpSupport() {
-    const helpLink = this.page.locator('a:has-text("Help"), a:has-text("Support")').first();
-    await helpLink.waitFor({ state: 'attached', timeout: 15000 });
-    await helpLink.scrollIntoViewIfNeeded();
-    await helpLink.waitFor({ state: 'visible', timeout: 15000 });
-    await helpLink.click();
     await this.waitForNetworkIdle();
   }
 }
