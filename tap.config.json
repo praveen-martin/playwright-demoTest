@@ -1,5 +1,5 @@
 {
   "project_id": "50e6be2d-0b18-48ca-bfa7-d2ac9a4dc42b",
-  "tap_api_url": "https://tapdapv2.walkingtree.tech",
+  "tap_api_url": "",
   "note": "Used by fetch-credentials.js to pull credentials from TAP backend"
 }

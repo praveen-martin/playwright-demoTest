@@ -53,6 +53,7 @@ test.describe('Dashboard Navigation and Export Functionality', () => {
     await dashboardPage.verifyDashboard();
     await dashboardPage.clickSidebarOption('Settings');
     await dashboardPage.clickSidebarOption('Dashboard');
+    await dashboardPage.verifyDashboard();
   });
 
   // ── TYPE B: IN-APP TEST ──
@@ -89,7 +90,7 @@ test.describe('Dashboard Navigation and Export Functionality', () => {
     await dashboardPage.clickLogin();
     await dashboardPage.verifyDashboard();
     await dashboardPage.clickExportButton();
-    // Add logic to verify the downloaded file
+    // Additional validation for the downloaded file would go here
   });
 
   // ── TYPE B: IN-APP TEST ──
@@ -117,7 +118,7 @@ test.describe('Dashboard Navigation and Export Functionality', () => {
     await dashboardPage.clickLogin();
     await dashboardPage.verifyDashboard();
     await dashboardPage.clickExportButton();
-    // Add logic to verify success message after export
+    // Additional validation for success messages would go here
   });
 
 });
