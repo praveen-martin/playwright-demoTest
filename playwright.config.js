@@ -1,48 +1,26 @@
 require('dotenv').config();
+
 const { defineConfig, devices } = require('@playwright/test');
 
 module.exports = defineConfig({
   testDir: './src/tests',
-
-  timeout: 120000,
-  expect: { timeout: 10000 },
-
-  fullyParallel: false,
-
-  forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 2 : 1,
-  workers: 2,
-
+  timeout: 60000,
+  retries: 0,
+  workers: 1,
   reporter: [
-    ['list'],
-    ['html', { open: 'never' }]
+    ['html', { open: 'always' }],
+    ['./tap-reporter.js'],
   ],
-
   use: {
     baseURL: process.env.BASE_URL,
-
-    headless: process.env.CI ? true : false,
-
+    headless: true,
     screenshot: 'only-on-failure',
-    video: 'retain-on-failure',
-    trace: 'on-first-retry',
-
-    viewport: { width: 1280, height: 720 },
-
-    actionTimeout: 15000,
-    navigationTimeout: 30000,
-
-    ignoreHTTPSErrors: true,
-
-    launchOptions: {
-      slowMo: 0
-    }
+    video: 'off',
   },
-
   projects: [
-    { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
-    { name: 'firefox', use: { ...devices['Desktop Firefox'] } },  
+    {
+      name: 'chromium',
+      use: { ...devices['Desktop Chrome'] },
+    },
   ],
-
-  outputDir: 'test-results/',
 });
