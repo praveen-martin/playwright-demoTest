@@ -3,7 +3,7 @@ const { expect } = require('@playwright/test');
 /**
  * Page Object: ManageRolesInUserManagementModulePage
  * Project    : Playwright
- * Generated  : 2026-05-22 09:28
+ * Generated  : 2026-05-22 12:10
  */
 class ManageRolesInUserManagementModulePage {
   constructor(page) {
