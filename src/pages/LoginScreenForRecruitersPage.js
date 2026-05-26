@@ -8,7 +8,7 @@ class LoginScreenForRecruitersPage {
 
   async navigate(url) {
     await this.page.goto(url);
-    await this.page.waitForLoadState('networkidle');
+    await this.waitForNetworkIdle();
   }
 
   async goToSignin() {
@@ -31,8 +31,8 @@ class LoginScreenForRecruitersPage {
       // "Continue as Organization" step is optional
     }
 
-    await this.page.waitForURL(/signin|organization-signup|login/i, { timeout: 15000 });
-    await this.page.waitForLoadState('networkidle');
+    await this.page.waitForURL(/signin|login|organization-signup/i, { timeout: 15000 });
+    await this.waitForNetworkIdle();
   }
 
   async waitForNetworkIdle() {
@@ -61,7 +61,7 @@ class LoginScreenForRecruitersPage {
     await btn.scrollIntoViewIfNeeded();
     await btn.waitFor({ state: 'visible', timeout: 15000 });
     await btn.click();
-    await this.page.waitForLoadState('networkidle');
+    await this.waitForNetworkIdle();
   }
 
   async verifyDashboard() {
@@ -69,17 +69,23 @@ class LoginScreenForRecruitersPage {
   }
 
   async verifyLoginError() {
-    await expect(this.page.locator('*').filter({ hasText: /error|invalid|incorrect|failed|wrong|must contain|required|try again|incorrect|wrong|invalid|password/i }).first())
+    await expect(this.page.locator('*').filter({ hasText: /error|invalid|incorrect|failed|wrong/i }).first())
       .toBeVisible({ timeout: 10000 });
   }
 
   async checkShowHidePassword() {
-    const toggleBtn = this.page.locator('[aria-label="Show password"], [aria-label="Hide password"]').first();
-    await toggleBtn.waitFor({ state: 'attached', timeout: 15000 });
-    await toggleBtn.scrollIntoViewIfNeeded();
-    await toggleBtn.waitFor({ state: 'visible', timeout: 15000 });
-    await toggleBtn.click();
+    const passwordField = this.page.locator('input[type="password"], input[name="password"], [placeholder*="password" i]').first();
+    await passwordField.waitFor({ state: 'attached', timeout: 15000 });
+    await passwordField.scrollIntoViewIfNeeded();
+    await passwordField.waitFor({ state: 'visible', timeout: 15000 });
+    
+    await this.page.locator('button:has-text("Show"), button:has-text("Hide")').first().click();
     await this.page.waitForLoadState('networkidle');
+    await expect(passwordField).toHaveAttribute('type', 'text');
+    
+    await this.page.locator('button:has-text("Show"), button:has-text("Hide")').first().click();
+    await this.page.waitForLoadState('networkidle');
+    await expect(passwordField).toHaveAttribute('type', 'password');
   }
 }
 
